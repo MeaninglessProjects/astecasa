@@ -1,0 +1,24 @@
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: #e5e7eb;
+}
+
+/* Fix icone Leaflet di default (marker mancanti con bundler) */
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}

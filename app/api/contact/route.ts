@@ -134,7 +134,19 @@ export async function POST(request: NextRequest) {
       emailError,
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Errore invio.';
+    // Gli errori Supabase (PostgrestError) sono oggetti semplici, non istanze
+    // di Error: estraiamo il messaggio in modo esplicito così l'utente vede
+    // la causa reale invece di un generico "Errore invio."
+    let message = 'Errore invio.';
+    if (err instanceof Error && err.message) message = err.message;
+    else if (err && typeof err === 'object' && 'message' in err && err.message) {
+      message = String((err as { message: unknown }).message);
+    }
+    try {
+      console.error('[contact] errore:', message, err);
+    } catch {
+      // mai bloccare la risposta per un log
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
